@@ -4,7 +4,10 @@ First of all, we start with a `checksec`:
 
 ![Screenshot from 2025-03-27 00-38-37](https://github.com/user-attachments/assets/3920eca5-f740-4ad0-ad07-975e511cdbbb)
 
+The stack Canary was enable to prevent buffer overflow attack.
+To bypass that, we need to know the value of Canary and override with its value. if not, the program will detect canary changing, so we will fail and get:
 
+`` *** stack smashing detected ***: terminated crash..``
 
 ### Disassembly
 
