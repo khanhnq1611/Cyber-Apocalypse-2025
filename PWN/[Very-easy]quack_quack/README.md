@@ -88,6 +88,7 @@ unsigned __int64 duck_attack()
 ```
 
 ### Debugging 
+I used IDA pro, so it automatically debug and find the address of variables for me. You can see that on the comments of the disassembled code.
 
 Now, to prove all this theory we can check the debugging. 
 ```
@@ -116,7 +117,7 @@ And then `\x00` is overrided which is the last byte of canary.
   v1 = strstr((const char *)buf, "Quack Quack ");
   printf("Quack Quack %s, ready to fight the Duck?\n\n> ", v1 + 32);
 ```
-Thus, `v1+32=121' and  v1 is the first letter that is found from input. 
+Thus, `v1+32=121` and  v1 is the first letter that is found from input. 
 So we need to send `89*'A' + "Quack Quack "(12 bytes) = total 101 bytes = 0x65`
 ```python
 r.sendlineafter('> ', b'A'* (0x65 - len('Quack Quack ')) + b'Quack Quack ')
@@ -128,7 +129,7 @@ canary = u64(r.recv(7).rjust(8, b'\x00'))
 
 After have Canary value, we calculate the distance between the second input and the canary as the previous one.
 `0x60-0x8= 88 bytes`. This time we dont need to plus 1 byte because we have the canary value.
-So the payload is ``88*'A' + Canary + 8 bytes (save rbp) + return address(duck_attack)`.
+So the payload is `88*'A' + Canary + 8 bytes (save rbp) + return address(duck_attack)`.
 
 
 # Result
