@@ -100,8 +100,10 @@ RIP = rop.syscall[0] (return utility syscall).
 
 The kernel "restores" these registers and jumps to rop.syscall[0].
 The utility syscall is called again, but now RAX = 0x3b, so it executes execve("/bin/sh", NULL, NULL).
+
 Why is this part needed?
 SYS_rt_sigreturn doesn't know that we want to call execve. We have to provide a frame signal to "tell" the kernel: "Set the registers like this and jump here".
+
 This is the only way to control multiple registers at once (RAX, RDI, RSI, RDX, RIP) without needing a longer ROP chain (which is hard to find in a small binary like this).
 
 Running solver remotely at IP port
