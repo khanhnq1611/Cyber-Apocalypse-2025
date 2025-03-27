@@ -26,7 +26,7 @@ Starting with `_start()`:
 
 ![image](https://github.com/user-attachments/assets/f1b71c35-c417-4886-8d7d-c9c2c2ab5d9a)
 
-That's the whole binary, we see there is a huge buffer overflow that `rdx` reads up to `0x106 = 262` bytes. First of all, we need to find a possible gadget and `/bin/sh` address.
+That's the whole binary, we see there is a huge buffer overflow that `rdx` reads up to `0x106 = 262` bytes by read syscall. And we can modify return address if we send enough bytes to override. First of all, we need to find a possible gadget and `/bin/sh` address.
 
 ![image](https://github.com/user-attachments/assets/618d8c46-cbd1-4c37-987e-bf7fc383a72f)
 
@@ -59,6 +59,50 @@ frame.rip = SYSCALL_RET
 
 payload += bytes(frame)
 ```
+# Why I created like this. We should know how the stack allocate data.
+
+[filler | rop.rax[0] | 0xf | rop.syscall[0] | Sigreturn Frame]
+
+When SYS_read reads the payload onto the stack (at RSP - 8), the stack looks like this:
+```
+RSP-8: "w3th4nds"
+RSP: rop.rax[0]
+RSP+8: 0xf
+RSP+16: rop.syscall[0]
+RSP+24: [Sigreturn Frame]
+```
+The ret instruction jumps to the value at RSP now is RAX
+
+Gadget pop rax; ret:
+pop rax: Get 0xf from RSP+8 and allocate it to RAX.
+
+ret: Skip to rop.syscall[0] at RSP+16.
+
+The syscall gadget (at rop.syscall[0]) calls SYS_rt_sigreturn because RAX = 0xf now.
+Why is this needed?
+
+SYS_rt_sigreturn requires RAX = 0xf and needs a way to put this value into RAX. The pop rax utility; ret is the only tool in the program that is allowed to do that.
+After RAX = 0xf, we need to call the syscall to execute. So this ROP string is the "start" step to move to the next stage.
+
+Thinking: The ROP chain is like a "bridge" from the initial state of the program (after SYS_read) to the SROP mechanism.
+# Sigreturn Frame Section - "Execute the final goal"
+
+Goal: Provide a frame signal to the kernel to read when SYS_rt_sigreturn is called, from which registers are set to call execve("/bin/sh", NULL, NULL).
+
+When SYS_rt_sigreturn is called (from the utility syscall in stage 1), the kernel checks the stack at location RSP for the Sigreturn Frame.
+
+At this point, RSP points to RSP+24 (byte(frame) section), which contains the values:
+RAX = 0x3b (execve syscall number).
+RDI = binsh (pointer to /bin/sh).
+RSI = 0x0 (NULL).
+RDX = 0x0 (NULL).
+RIP = rop.syscall[0] (return utility syscall).
+
+The kernel "restores" these registers and jumps to rop.syscall[0].
+The utility syscall is called again, but now RAX = 0x3b, so it executes execve("/bin/sh", NULL, NULL).
+Why is this part needed?
+SYS_rt_sigreturn doesn't know that we want to call execve. We have to provide a frame signal to "tell" the kernel: "Set the registers like this and jump here".
+This is the only way to control multiple registers at once (RAX, RDI, RSI, RDX, RIP) without needing a longer ROP chain (which is hard to find in a small binary like this).
 
 Running solver remotely at IP port
 
