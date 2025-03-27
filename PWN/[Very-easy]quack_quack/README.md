@@ -59,8 +59,7 @@ As we can see, there are 2 buffers, `buf[4]` and `v3[11]` of unknown size so far
   printf("Quack Quack %s, ready to fight the Duck?\n\n> ", v1 + 32);
 ```
 
-Our first input goes to `buf` and we get a leak of `v1 + 32`. That means we can leak up to `32` from the end of the buffer 
-where the string `Quack Quack ` is found in our input string. Luckily, we see that we can leak the `canary` address at such offset when debug.
+Our first input goes to `buf` and we get a leak of `v1 + 32`. That means we can leak up to `32` from value of v1 where the string `Quack Quack ` is found in our input string. Luckily, we see that we can leak the `canary` address at such offset when debug.
 After that, we can overflow the second buffer and perform a `ret2win`. There is a function called `duck_attack` that prints the flag.
 
 ```c
