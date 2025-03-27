@@ -29,11 +29,7 @@ Starting with `_start()`:
 That's the whole binary, we see there is a huge buffer overflow that `rdx` reads up to `0x106 = 262` bytes. First of all, we need to find a possible gadget and `/bin/sh` address.
 
 ```gdb 
-pwndbg> find 0x43000, 0x43900, "/bin/sh"
-0x43238
-1 pattern found.
-pwndbg> x/s 0x43238
-0x43238:  "/bin/sh"
+Find all gadget and /bin/sh
 ```
 
 Now that we have this, we can craft the `SROP` chain.
