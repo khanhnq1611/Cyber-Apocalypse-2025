@@ -65,7 +65,7 @@ payload += bytes(frame)
 
 When SYS_read reads the payload onto the stack (at RSP - 8), the stack looks like this:
 ```
-RSP-8: "w3th4nds"
+RSP-8: "aaaaaaaa"
 RSP: rop.rax[0]
 RSP+8: 0xf
 RSP+16: rop.syscall[0]
