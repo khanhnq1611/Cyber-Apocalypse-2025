@@ -14,16 +14,7 @@ RWX:        Has RWX segments
 Stripped:   No
 ```
 
-### Protections 🛡️
-
-As we can see, all protection are disabled and the binary has `RWX` segments:
-
-| Protection | Enabled  | Usage   |
-| :---:      | :---:    | :---:   |
-| **Canary** | ❌       | Prevents **Buffer Overflows**  |
-| **NX**     | ❌     | Disables **code execution** on stack |
-| **PIE**    | ❌       | Randomizes the **base address** of the binary |
-| **RelRO**  | **Full** | Makes some binary sections **read-only** |
+As we can see, we can do something there!
 
 The program has no interface, so we head into the disassembly right away.
 
