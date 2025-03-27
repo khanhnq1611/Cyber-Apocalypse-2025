@@ -28,9 +28,8 @@ Starting with `_start()`:
 
 That's the whole binary, we see there is a huge buffer overflow that `rdx` reads up to `0x106 = 262` bytes. First of all, we need to find a possible gadget and `/bin/sh` address.
 
-```gdb 
-Find all gadget and /bin/sh
-```
+![image](https://github.com/user-attachments/assets/618d8c46-cbd1-4c37-987e-bf7fc383a72f)
+
 
 Now that we have this, we can craft the `SROP` chain.
 We want to execute system("/bin/sh") but in assembly language it is execve("/bin/sh", argument, env ) function.
