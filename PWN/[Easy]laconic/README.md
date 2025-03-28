@@ -33,6 +33,7 @@ That's the whole binary, we see there is a huge buffer overflow that `rdx` reads
 
 Now that we have this, we can craft the `SROP` chain.
 We want to execute system("/bin/sh") but in assembly language it is execve("/bin/sh", argument, env ) function.
+
 ![image](https://github.com/user-attachments/assets/b9f3ec88-7915-49f1-88b1-25aac79cd63e)
 
 ```python
