@@ -140,11 +140,12 @@ __int64 __fastcall target_dummy(__int64 a1, __int64 a2, __int64 a3, __int64 a4, 
 }
 ```
 
-As observed, the code allows an **out-of-bounds (OOB) write** because we have control over `idx`, the buffer index, and there is no validation for this value. 
+As observed, the code allows an **out of bounds (OOB)** write since we have control over `idx`, the buffer index, and there is no validation for this value.
 
-This likely triggers a vulnerability - possibly an out-of-bounds access or an integer underflow that allows memory manipulation.
+This could trigger a vulnerability - either an out of bounds access or an integer overflow allowing memory manipulation.
 
-Additionally, since `idx` is a signed integer, we can input negative values. By doing so, we can overwrite the saved `$rbp` value of the stack frame with a heap pointer to our input. Consequently, when the function concludes, the `leave` instruction will pivot the stack from its original state to the user-controlled input, effectively granting us control over the execution flow.
+Additionally, since `idx` is a signed integer, we can enter negative values. By doing so, we can overwrite the stored `$rbp` value of the stack frame with a heap pointer to our input. 
+Therefore, when the function ends, the `leave` instruction rotates the stack from its original state to the user-controlled input, essentially giving us control over the execution flow.
 
 ### Debugging 
 
