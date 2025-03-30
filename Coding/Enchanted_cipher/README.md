@@ -1,5 +1,5 @@
 ## Challenge overview
-```
+
 In this challenge, you are given an encoded message produced by an enchanted shifting cipher. The original plaintext consists of 3–7 randomly generated words, and the encryption process involves the following steps:
 
 - **Grouping Characters:**  
@@ -14,5 +14,6 @@ After the encoded message, two additional lines are provided:
 
 **Your Task:**  
 You must decode the encoded message by reversing the shifting process and restoring the original plaintext.
-```
+
+
 
