@@ -55,4 +55,6 @@ The goal is to select numbers from a list such that no two selected numbers are 
    - **O(N)**: We process each element once, making this approach efficient.
 
 ### Result
+Full code in ``writeup.py``
+``HTB{SUMM0N3RS_INC4NT4T10N_R3S0LV3D_7305466de02e687b23c162bcffefcd64}``
 
