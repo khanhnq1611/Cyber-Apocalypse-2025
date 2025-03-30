@@ -27,31 +27,36 @@ The input represents 4 rounds of attacks, each with a list of possible damage va
 which sums exactly to 77.
 ```
 
-## How to solve
-In this challenge, you need to:
-
-Read a list of subarrays, where each subarray contains possible damage values for one round of dragon attacks
-
-Read a target damage value T
-
-Find exactly one number from each subarray so that their sum equals T
-
-Return this combination as a list
-
-The challenge guarantees there's exactly one valid solution.
-
-Systematic Search with Pruning: The problem requires finding exactly one value from each subarray to sum to a target. Backtracking allows us to:
-```
-Explore all possible combinations by making choices one subarray at a time
-Abandon dead-end paths quickly (though this solution doesn't include explicit pruning)
-Find the guaranteed unique solution without needing to check all combinations
-Decision Tree Approach: The solution builds a decision tree where:
-
-Each level corresponds to a subarray
-Each branch represents selecting a specific value from that subarray
-A complete path from root to leaf represents one possible combination
-Early Termination: The found flag allows the algorithm to stop once the solution is found, which is more efficient than generating all possible combinations.
-```
+#### Key Concepts
+``
+Backtracking:
+Backtracking is a recursive algorithm used to explore all possible combinations or paths in a problem.
+It allows you to "try" a solution, and if it doesn't work, "backtrack" to try another option.
+Recursive Exploration:
+For each subarray, try every number and move to the next subarray.
+Keep track of the current sum and the selected numbers (path).
+Early Termination:
+Since there is exactly one valid solution, stop the recursion as soon as the solution is found.
+``
+#### Plan the Solution
+``
+Input Parsing:
+Read the input string and convert it into a list of subarrays.
+Read the target value T.
+Recursive Function:
+Create a recursive function to explore all combinations of numbers.
+Pass the current index, current sum, and the current path (selected numbers) as parameters.
+Base Case:
+If all subarrays are processed (index == len(subarrays)):
+Check if the current sum equals T.
+If yes, save the current path as the solution and stop further exploration.
+Recursive Case:
+For each number in the current subarray:
+Add the number to the current sum and path.
+Recursively call the function for the next subarray.
+Output:
+Return the valid combination once found.
+``
 ## Result
 
 ![image](https://github.com/user-attachments/assets/ad489185-59b2-4781-96ca-610405e7a729)
