@@ -28,7 +28,7 @@ which sums exactly to 77.
 ```
 
 #### Key Concepts
-``
+```
 Backtracking:
 Backtracking is a recursive algorithm used to explore all possible combinations or paths in a problem.
 It allows you to "try" a solution, and if it doesn't work, "backtrack" to try another option.
@@ -37,9 +37,9 @@ For each subarray, try every number and move to the next subarray.
 Keep track of the current sum and the selected numbers (path).
 Early Termination:
 Since there is exactly one valid solution, stop the recursion as soon as the solution is found.
-``
+```
 #### Plan the Solution
-``
+```
 Input Parsing:
 Read the input string and convert it into a list of subarrays.
 Read the target value T.
@@ -56,7 +56,7 @@ Add the number to the current sum and path.
 Recursively call the function for the next subarray.
 Output:
 Return the valid combination once found.
-``
+```
 ## Result
 
 ![image](https://github.com/user-attachments/assets/ad489185-59b2-4781-96ca-610405e7a729)
