@@ -235,13 +235,14 @@ This passphrase is located in the last 4 bytes of storage slot 0 in EldoriaGateK
 
 #### Condition 2: rolesBitMask = 0
 How to Activate:
-
+```
 Send 255 wei when calling enter.
 The msg.value (255 wei) is cast to uint8 → _contribution = 255.
 Inside evaluateIdentity, the calculation logic is:
 roles = defaultRolesMask (1) + _contribution (255) = 256
 Since roles is a uint8, the value 256 overflows → roles = 0.
 Note: The assembly check lt(roles, defaultRolesMask) uses 256-bit integers, so 256 > 1 → no revert.
+```
 
 Now, we need to understand where the secret is stored. The EldoriaGateKernel’s constructor takes a bytes4 _secret and stores it in eldoriaSecret. In Solidity, state variables are stored in slots.
 ```bash
@@ -255,7 +256,11 @@ Villager data: id=0, authenticated=False, roles=0
 Solved: False
 ```
 First time I ran, I though the secret is in the first 4 bytes, so the script was failed.
-In Solidity, when a variable is less than 32 bytes, it’s stored right-aligned (padded on the left). For example, a bytes4 in slot 0 would occupy the last 4 bytes of the 32-byte slot. 
+
+In Solidity, when a variable is less than 32 bytes, it’s stored right-aligned (padded on the left). 
+
+For example, a bytes4 in slot 0 would occupy the last 4 bytes of the 32-byte slot. 
+
 So when we retrieve slot 0, the bytes4 would be the last 4 bytes of the 32-byte value. And that is 0xdeadfade.
 
 Second, let’s look at the assembly code again:
