@@ -232,9 +232,9 @@ How to Activate:
 
 Call the enter function of EldoriaGate with the correct passphrase (the eldoriaSecret stored in EldoriaGateKernel).
 This passphrase is located in the last 4 bytes of storage slot 0 in EldoriaGateKernel (not the first 4 bytes).
-Condition 2: rolesBitMask = 0
 
-#### How to Activate:
+#### Condition 2: rolesBitMask = 0
+How to Activate:
 
 Send 255 wei when calling enter.
 The msg.value (255 wei) is cast to uint8 → _contribution = 255.
@@ -242,6 +242,7 @@ Inside evaluateIdentity, the calculation logic is:
 roles = defaultRolesMask (1) + _contribution (255) = 256
 Since roles is a uint8, the value 256 overflows → roles = 0.
 Note: The assembly check lt(roles, defaultRolesMask) uses 256-bit integers, so 256 > 1 → no revert.
+
 Now, we need to understand where the secret is stored. The EldoriaGateKernel’s constructor takes a bytes4 _secret and stores it in eldoriaSecret. In Solidity, state variables are stored in slots.
 ```bash
 khanh@ubuntu:~/Documents/WorkSpaceHTB/HTBCTF/block-chain/blockchain_eldoriagate$ python3 exploit.py 
