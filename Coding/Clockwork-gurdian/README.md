@@ -10,14 +10,12 @@ Movement is restricted to the four cardinal directions (up, down, left, right). 
 
 For example, given the grid:
 
-```py
 [
     [0, 0, 1, 0, 0, 1],
     [0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0],
     [0, 0, 1, 1, 0, 'E']
 ]
-```
 ```
 ### Problem Understanding
 The challenge is to compute the shortest safe path in a grid-based labyrinth. The grid contains:
