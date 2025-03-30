@@ -1,4 +1,5 @@
 ## Challenge Overview
+Level: Very easy
 
 The Eldorion challenge features a smart contract representing a powerful entity with 300 health points.
 
