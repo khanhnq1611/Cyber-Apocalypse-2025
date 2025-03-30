@@ -148,4 +148,5 @@ This contract makes three consecutive attack calls within a single function exec
 2. Call the exploit function, which executes three 100-damage attacks in sequence
 3. The Eldorion's health is reduced from 300 → 200 → 100 → 0, defeating it
 
-![alt text](image.png)
+![image](https://github.com/user-attachments/assets/cbc3fe05-5de7-4749-8044-03426cb46f7f)
+
