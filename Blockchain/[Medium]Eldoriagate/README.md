@@ -289,6 +289,7 @@ An integer overflow, resulting in a rolesBitMask of 0 without
 reverting the transaction.
 ## Exploitation
 First, using netcat to the server and get the target’s information.
+![image](https://github.com/user-attachments/assets/c93f9e1a-7407-4aa7-aee5-a92ae02223bf)
 
 
 Full code ``exploit.py``
