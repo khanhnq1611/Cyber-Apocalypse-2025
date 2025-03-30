@@ -27,9 +27,8 @@ The input represents 4 rounds of attacks, each with a list of possible damage va
 which sums exactly to 77.
 ```
 
-#### Key Concepts
+#### Key Concepts - Backtracking
 ```
-Backtracking:
 Backtracking is a recursive algorithm used to explore all possible combinations or paths in a problem.
 It allows you to "try" a solution, and if it doesn't work, "backtrack" to try another option.
 Recursive Exploration:
