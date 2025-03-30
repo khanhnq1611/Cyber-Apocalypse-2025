@@ -2,6 +2,7 @@
 
 * Đây là giải CTF nổi tiếng và được tổ chức hàng năm của HTB với hàng chục nghìn người chơi tham gia. Năm nay HTB mang đến các thử thách rất hay và thú vị.
 * Giải CTF tuyệt vời không chỉ bởi vì đội tôi đứng thứ 62 toàn giải, mà còn vì tôi đã giải được rất nhiều challenge và được MVP đội.
+* Giải lần này tôi may mắn clear Blockchain, Coding, AI, gần full Pwn, và các category khác mỗi thứ vài bài
 * Tôi hiếm khi viết writeup nên có gì mọi người thông cảm nha!
 ![image](https://github.com/user-attachments/assets/6ca0b001-2181-4e71-981c-7e64c2fa0a54)
 
